@@ -9,6 +9,8 @@ pub enum TokenType {
     RightParen,
     LeftBrace,
     RightBrace,
+    LeftSquareBracket,
+    RightSquareBracket,
     Comma,
     Dot,
     Minus,
@@ -32,6 +34,7 @@ pub enum TokenType {
     Int,
     Float,
     String,
+    Boolean,
 
     // Literals.
     Identifier,
@@ -50,7 +53,6 @@ pub enum TokenType {
     Or,
     Print,
     Return,
-    Super,
     This,
     True,
     Var,

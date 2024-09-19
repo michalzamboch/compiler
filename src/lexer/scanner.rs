@@ -13,7 +13,7 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(src: &str) -> Self {
-        let expresion = r"(?:[0-9]*\.?[0-9]+|\d+|\w+|\;|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|\=|\n|\n\r)";
+        let expresion = r"(?:[0-9]*\.?[0-9]+|\d+|\w+|\;|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|==|<=|>=|\n|\n\r|<|>|!=|!|=)";
         let re = Regex::new(expresion);
 
         Self {
@@ -46,10 +46,21 @@ impl Scanner {
 
     fn create_correct_token(&self, element: &str, line: i32) -> Token {
         match element {
+            "=" => Token::new(TokenType::Equal, element.to_string(), line),
+            "==" => Token::new(TokenType::EqualEqual, element.to_string(), line),
+            ">" => Token::new(TokenType::Greater, element.to_string(), line),
+            ">=" => Token::new(TokenType::GreaterEqual, element.to_string(), line),
+            "<=" => Token::new(TokenType::LessEqual, element.to_string(), line),
+            "<" => Token::new(TokenType::Less, element.to_string(), line),
+            "!=" => Token::new(TokenType::BangEqual, element.to_string(), line),
+            "!" => Token::new(TokenType::Bang, element.to_string(), line),
+            ";" => Token::new(TokenType::Semicolon, element.to_string(), line),
             ")" => Token::new(TokenType::RightParen, element.to_string(), line),
             "(" => Token::new(TokenType::LeftParen, element.to_string(), line),
             "}" => Token::new(TokenType::RightBrace, element.to_string(), line),
             "{" => Token::new(TokenType::LeftBrace, element.to_string(), line),
+            "]" => Token::new(TokenType::RightSquareBracket, element.to_string(), line),
+            "[" => Token::new(TokenType::LeftSquareBracket, element.to_string(), line),
             "\n\r" | "\n" => Token::new(TokenType::NewLine, element.to_string(), line),
             "int" => Token::new(TokenType::Int, element.to_string(), line),
             _ => Token::new(TokenType::Identifier, element.to_string(), line),
