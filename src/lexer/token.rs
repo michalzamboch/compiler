@@ -5,18 +5,18 @@ use crate::types::token_type::TokenType;
 
 #[derive(Debug)]
 pub struct Token {
-    token_type: TokenType,
-    lexeme: String,
-    literal: String,
-    line: i32,
+    pub token_type: TokenType,
+    pub lexeme: String,
+    pub literal: String,
+    pub line: i32,
 }
 
 impl Token {
-    fn new(token_type: TokenType, lexeme: String, literal: String, line: i32) -> Self {
+    pub fn new(token_type: TokenType, lexeme: String, line: i32) -> Self {
         Self {
             token_type,
-            lexeme,
-            literal,
+            lexeme: lexeme.clone(),
+            literal: lexeme,
             line,
         }
     }
@@ -24,13 +24,6 @@ impl Token {
 
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{} {} {} {}",
-            self.line,
-            self.token_type.to_string(),
-            self.lexeme,
-            self.literal
-        )
+        write!(f, "{} {} {}", self.line, self.token_type, self.lexeme,)
     }
 }

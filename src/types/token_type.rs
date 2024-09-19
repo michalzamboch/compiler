@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum TokenType {
     // Single-character tokens.
     LeftParen,
@@ -17,6 +17,8 @@ pub enum TokenType {
     Slash,
     Star,
 
+    NewLine,
+
     Bang,
     BangEqual,
     Equal,
@@ -26,9 +28,14 @@ pub enum TokenType {
     Less,
     LessEqual,
 
+    //Types
+    Int,
+    Float,
+    String,
+
     // Literals.
     Identifier,
-    String,
+    Str,
     Number,
 
     // Keywords.
@@ -52,7 +59,6 @@ pub enum TokenType {
     Eof,
 }
 
-        
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)

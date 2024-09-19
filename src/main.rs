@@ -16,5 +16,9 @@ fn main() {
     ";
 
     let scanner = Scanner::new(input);
-    scanner.get_tokens();
+    let tokens = scanner.get_tokens();
+
+    for token in tokens.iter() {
+        println!("{}", token);
+    }
 }
