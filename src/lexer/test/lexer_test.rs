@@ -114,3 +114,73 @@ fn test_eq_tokens() {
     assert_eq!(tokens[3].token_type, TokenType::BangEqual);
     assert_eq!(tokens[4].token_type, TokenType::Equal);
 }
+
+#[test]
+fn test_math_tokens() {
+    let input = r"5 + 4 - 7*10/2";
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    println!("{:?}", tokens);
+    assert_eq!(tokens.len(), 9);
+    assert_eq!(tokens[1].token_type, TokenType::Plus);
+    assert_eq!(tokens[3].token_type, TokenType::Minus);
+    assert_eq!(tokens[5].token_type, TokenType::Star);
+    assert_eq!(tokens[7].token_type, TokenType::Slash);
+}
+
+#[test]
+fn test_commas() {
+    let input = r#""hello",5,5.45"#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    println!("{:?}", tokens);
+    assert_eq!(tokens.len(), 5);
+    assert_eq!(tokens[0].lexeme, r#""hello""#);
+    assert_eq!(tokens[1].lexeme, ",");
+    assert_eq!(tokens[2].lexeme, "5");
+    assert_eq!(tokens[3].lexeme, ",");
+    assert_eq!(tokens[4].lexeme, "5.45");
+}
+
+#[test]
+fn test_dots() {
+    let input = r#"CLASS_NAME.FUNCTION,5,5.45"#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    println!("{:?}", tokens);
+    assert_eq!(tokens.len(), 7);
+    assert_eq!(tokens[0].lexeme, "CLASS_NAME");
+    assert_eq!(tokens[1].lexeme, ".");
+    assert_eq!(tokens[2].lexeme, "FUNCTION");
+    assert_eq!(tokens[3].lexeme, ",");
+    assert_eq!(tokens[4].lexeme, "5");
+    assert_eq!(tokens[5].lexeme, ",");
+    assert_eq!(tokens[6].lexeme, "5.45");
+}
+
+#[test]
+fn test_equals() {
+    let input = r#"==="#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    println!("{:?}", tokens);
+    assert_eq!(tokens.len(), 2);
+    assert_eq!(tokens[0].lexeme, "==");
+    assert_eq!(tokens[1].lexeme, "=");
+}
+
+#[test]
+fn test_and_or() {
+    let input = r#" || && "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    println!("{:?}", tokens);
+    assert_eq!(tokens.len(), 2);
+    assert_eq!(tokens[0].token_type, TokenType::Or);
+    assert_eq!(tokens[1].token_type, TokenType::And);
+}

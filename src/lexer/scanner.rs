@@ -13,7 +13,7 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(src: &str) -> Self {
-        let expresion = r"(?:[0-9]*\.?[0-9]+|\d+|\w+|\;|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|==|<=|>=|\n|\n\r|<|>|!=|!|=)";
+        let expresion = r#"(?:[0-9]*\.?[0-9]+|\d+|\w+|"(.*?)"|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|==|<=|>=|\n|\n\r|<|>|!=|!|=|;|\,|\.|\|\||&&)"#;
         let re = Regex::new(expresion);
 
         Self {
@@ -61,6 +61,14 @@ impl Scanner {
             "{" => Token::new(TokenType::LeftBrace, element.to_string(), line),
             "]" => Token::new(TokenType::RightSquareBracket, element.to_string(), line),
             "[" => Token::new(TokenType::LeftSquareBracket, element.to_string(), line),
+            "+" => Token::new(TokenType::Plus, element.to_string(), line),
+            "-" => Token::new(TokenType::Minus, element.to_string(), line),
+            "/" => Token::new(TokenType::Slash, element.to_string(), line),
+            "*" => Token::new(TokenType::Star, element.to_string(), line),
+            "." => Token::new(TokenType::Dot, element.to_string(), line),
+            "," => Token::new(TokenType::Comma, element.to_string(), line),
+            "||" => Token::new(TokenType::Or, element.to_string(), line),
+            "&&" => Token::new(TokenType::And, element.to_string(), line),
             "\n\r" | "\n" => Token::new(TokenType::NewLine, element.to_string(), line),
             "int" => Token::new(TokenType::Int, element.to_string(), line),
             _ => Token::new(TokenType::Identifier, element.to_string(), line),
