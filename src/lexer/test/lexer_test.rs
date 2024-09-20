@@ -1,6 +1,9 @@
 #![allow(unused_imports)]
 
-use crate::{lexer::scanner::Scanner, types::token_type::*};
+use crate::{
+    lexer::scanner::Scanner,
+    types::{token_type::*, token_value::TokenValue},
+};
 
 #[test]
 fn test_length() {
@@ -137,11 +140,11 @@ fn test_commas() {
 
     println!("{:?}", tokens);
     assert_eq!(tokens.len(), 5);
-    assert_eq!(tokens[0].lexeme, r#""hello""#);
-    assert_eq!(tokens[1].lexeme, ",");
-    assert_eq!(tokens[2].lexeme, "5");
-    assert_eq!(tokens[3].lexeme, ",");
-    assert_eq!(tokens[4].lexeme, "5.45");
+    assert_eq!(tokens[0].literal, r#""hello""#);
+    assert_eq!(tokens[1].literal, ",");
+    assert_eq!(tokens[2].literal, "5");
+    assert_eq!(tokens[3].literal, ",");
+    assert_eq!(tokens[4].literal, "5.45");
 }
 
 #[test]
@@ -152,13 +155,13 @@ fn test_dots() {
 
     println!("{:?}", tokens);
     assert_eq!(tokens.len(), 7);
-    assert_eq!(tokens[0].lexeme, "CLASS_NAME");
-    assert_eq!(tokens[1].lexeme, ".");
-    assert_eq!(tokens[2].lexeme, "FUNCTION");
-    assert_eq!(tokens[3].lexeme, ",");
-    assert_eq!(tokens[4].lexeme, "5");
-    assert_eq!(tokens[5].lexeme, ",");
-    assert_eq!(tokens[6].lexeme, "5.45");
+    assert_eq!(tokens[0].literal, "CLASS_NAME");
+    assert_eq!(tokens[1].literal, ".");
+    assert_eq!(tokens[2].literal, "FUNCTION");
+    assert_eq!(tokens[3].literal, ",");
+    assert_eq!(tokens[4].literal, "5");
+    assert_eq!(tokens[5].literal, ",");
+    assert_eq!(tokens[6].literal, "5.45");
 }
 
 #[test]
@@ -167,10 +170,9 @@ fn test_equals() {
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
 
-    println!("{:?}", tokens);
     assert_eq!(tokens.len(), 2);
-    assert_eq!(tokens[0].lexeme, "==");
-    assert_eq!(tokens[1].lexeme, "=");
+    assert_eq!(tokens[0].literal, "==");
+    assert_eq!(tokens[1].literal, "=");
 }
 
 #[test]
@@ -179,8 +181,90 @@ fn test_and_or() {
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
 
-    println!("{:?}", tokens);
     assert_eq!(tokens.len(), 2);
     assert_eq!(tokens[0].token_type, TokenType::Or);
     assert_eq!(tokens[1].token_type, TokenType::And);
+}
+
+#[test]
+fn test_true_false() {
+    let input = r#" true  false "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens.len(), 2);
+    assert_eq!(tokens[0].value, TokenValue::Bool(true));
+    assert_eq!(tokens[1].value, TokenValue::Bool(false));
+}
+
+#[test]
+fn test_string() {
+    let input = r#" "Hello".,"World" "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens.len(), 4);
+    assert_eq!(tokens[0].value, TokenValue::String("Hello".to_owned()));
+    assert_eq!(tokens[1].token_type, TokenType::Dot);
+    assert_eq!(tokens[2].token_type, TokenType::Comma);
+    assert_eq!(tokens[3].value, TokenValue::String("World".to_owned()));
+}
+
+#[test]
+fn test_int() {
+    let input = r#" 123.456Hello "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens.len(), 2);
+    assert_eq!(tokens[0].literal, "123.456");
+    assert_eq!(tokens[1].literal, "Hello");
+}
+
+#[test]
+fn test_name() {
+    let input = r#" variable variable1 5000 variable2variable "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens.len(), 4);
+    assert_eq!(tokens[0].literal, "variable");
+    assert_eq!(tokens[0].token_type, TokenType::Identifier);
+    assert_eq!(tokens[1].literal, "variable1");
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].literal, "5000");
+    assert_eq!(tokens[2].token_type, TokenType::Interger);
+    assert_eq!(tokens[3].literal, "variable2variable");
+    assert_eq!(tokens[3].token_type, TokenType::Identifier);
+}
+
+#[test]
+fn test_while() {
+    let input = r#" 
+    bool x = true;
+    while(x==true)
+    {
+    }
+    "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens[0].token_type, TokenType::NewLine);
+    assert_eq!(tokens[1].token_type, TokenType::Boolean);
+    assert_eq!(tokens[2].token_type, TokenType::Identifier);
+    assert_eq!(tokens[3].token_type, TokenType::Equal);
+    assert_eq!(tokens[4].token_type, TokenType::True);
+    assert_eq!(tokens[5].token_type, TokenType::Semicolon);
+    assert_eq!(tokens[6].token_type, TokenType::NewLine);
+    assert_eq!(tokens[7].token_type, TokenType::While);
+    assert_eq!(tokens[8].token_type, TokenType::LeftParen);
+    assert_eq!(tokens[9].token_type, TokenType::Identifier);
+    assert_eq!(tokens[10].token_type, TokenType::EqualEqual);
+    assert_eq!(tokens[11].token_type, TokenType::True);
+    assert_eq!(tokens[12].token_type, TokenType::RightParen);
+    assert_eq!(tokens[13].token_type, TokenType::NewLine);
+    assert_eq!(tokens[14].token_type, TokenType::LeftBrace);
+    assert_eq!(tokens[15].token_type, TokenType::NewLine);
+    assert_eq!(tokens[16].token_type, TokenType::RightBrace);
+    assert_eq!(tokens[17].token_type, TokenType::NewLine);
 }

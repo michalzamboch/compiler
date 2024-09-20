@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum TokenType {
     // Single-character tokens.
     LeftParen,
@@ -31,19 +31,19 @@ pub enum TokenType {
     LessEqual,
 
     //Types
+    Identifier,
     Int,
     Float,
     String,
-    Boolean,
 
     // Literals.
-    Identifier,
     Str,
-    Number,
+    Interger,
+    Real,
+    Boolean,
 
     // Keywords.
     And,
-    Class,
     Else,
     False,
     Fun,
@@ -53,12 +53,8 @@ pub enum TokenType {
     Or,
     Print,
     Return,
-    This,
     True,
-    Var,
     While,
-
-    Eof,
 }
 
 impl fmt::Display for TokenType {
