@@ -2,8 +2,10 @@
 
 use std::fmt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum TokenType {
+    #[default]
+    Unknown,
     // Single-character tokens.
     LeftParen,
     RightParen,

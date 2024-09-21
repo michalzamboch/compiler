@@ -212,13 +212,23 @@ fn test_string() {
 
 #[test]
 fn test_int() {
-    let input = r#" 123.456Hello "#;
+    let input = r#" 123.456Hello 123 Hello123"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
 
-    assert_eq!(tokens.len(), 2);
     assert_eq!(tokens[0].literal, "123.456");
+    assert_eq!(tokens[0].token_type, TokenType::Real);
+    assert_eq!(tokens[0].value, TokenValue::Float(123.456));
+
     assert_eq!(tokens[1].literal, "Hello");
+
+    assert_eq!(tokens[2].literal, "123");
+    assert_eq!(tokens[2].token_type, TokenType::Interger);
+    assert_eq!(tokens[2].value, TokenValue::Int(123));
+
+    assert_eq!(tokens[3].literal, "Hello123");
+    assert_eq!(tokens[3].token_type, TokenType::Identifier);
+    assert_eq!(tokens[3].value, TokenValue::None);
 }
 
 #[test]
@@ -267,4 +277,48 @@ fn test_while() {
     assert_eq!(tokens[15].token_type, TokenType::NewLine);
     assert_eq!(tokens[16].token_type, TokenType::RightBrace);
     assert_eq!(tokens[17].token_type, TokenType::NewLine);
+}
+
+#[test]
+fn test_error_standard_strings() {
+    let input = r#" 
+    "
+    hello
+    "
+    "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens[1].token_type, TokenType::Unknown);
+    assert_eq!(tokens[3].token_type, TokenType::Identifier);
+    assert_eq!(tokens[5].token_type, TokenType::Unknown);
+}
+
+#[test]
+fn test_assign() {
+    let input = r#"int i=10+20;"#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens[0].token_type, TokenType::Int);
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].token_type, TokenType::Equal);
+    assert_eq!(tokens[3].token_type, TokenType::Interger);
+    assert_eq!(tokens[4].token_type, TokenType::Plus);
+    assert_eq!(tokens[5].token_type, TokenType::Interger);
+}
+
+#[test]
+fn test_brackets() {
+    let input = r#"{[()]}"#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens.len(), 6);
+    assert_eq!(tokens[0].token_type, TokenType::LeftBrace);
+    assert_eq!(tokens[1].token_type, TokenType::LeftSquareBracket);
+    assert_eq!(tokens[2].token_type, TokenType::LeftParen);
+    assert_eq!(tokens[3].token_type, TokenType::RightParen);
+    assert_eq!(tokens[4].token_type, TokenType::RightSquareBracket);
+    assert_eq!(tokens[5].token_type, TokenType::RightBrace);
 }

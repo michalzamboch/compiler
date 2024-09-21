@@ -13,7 +13,7 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(src: &str) -> Self {
-        let expresion = r#"(?:[0-9]*\.?[0-9]+|\d+|\w+|"(.*?)"|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|==|<=|>=|\n|\n\r|<|>|!=|!|=|;|\,|\.|\|\||&&)"#;
+        let expresion = r#"(?:[0-9]*\.?[0-9]+|"(.*?)"|\w+|\(|\)|\{|\}|\[|\]|\-|\+|\*|\/|==|<=|>=|\n|\n\r|<|>|!=|!|=|;|\,|\.|\|\||&&|\S)"#;
         let re = Regex::new(expresion);
 
         Self {
@@ -35,8 +35,8 @@ impl Scanner {
     }
 
     fn get_token(&self, element: regex::Captures<'_>, current_line: &mut i32) -> Token {
-        let extracted = element[0].to_owned();
-        let token = self.create_correct_token(&extracted, *current_line);
+        let extracted = &element[0];
+        let token = self.create_correct_token(extracted, *current_line);
 
         if token.token_type == TokenType::NewLine {
             *current_line += 1;
@@ -89,7 +89,7 @@ impl Scanner {
     }
 
     fn create_variable_token(&self, element: &str, line: i32) -> Token {
-        if element.starts_with("\"") && element.ends_with("\"") {
+        if element.starts_with("\"") && element.ends_with("\"") && element.len() > 1 {
             Token::new(TokenType::Str, element.to_string(), line)
         } else if element.chars().next().is_some_and(|c| c.is_ascii_digit()) {
             if element.contains(".") {
@@ -97,8 +97,14 @@ impl Scanner {
             } else {
                 Token::new(TokenType::Interger, element.to_string(), line)
             }
-        } else {
+        } else if element
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_ascii_alphabetic())
+        {
             Token::new(TokenType::Identifier, element.to_string(), line)
+        } else {
+            Token::new(TokenType::Unknown, element.to_string(), line)
         }
     }
 }
