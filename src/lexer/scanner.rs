@@ -29,6 +29,7 @@ impl Scanner {
             .reg
             .captures_iter(&self.source)
             .map(|element| self.get_token(element, &mut current_line))
+            .filter(|token| token.token_type != TokenType::NewLine)
             .collect();
 
         tokens

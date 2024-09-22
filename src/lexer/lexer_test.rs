@@ -32,13 +32,10 @@ fn test_new_line() {
     let scanner = Scanner::new(input);
 
     let tokens = scanner.get_tokens();
-    assert_eq!(tokens.len(), 2);
 
-    assert_eq!(tokens[1].token_type, TokenType::Int);
-    assert_eq!(tokens[0].token_type, TokenType::NewLine);
+    assert_eq!(tokens[0].token_type, TokenType::Int);
 
-    assert_eq!(tokens[0].line, 0);
-    assert_eq!(tokens[1].line, 1);
+    assert_eq!(tokens[0].line, 1);
 }
 
 #[test]
@@ -62,14 +59,6 @@ fn test_emelent_count() {
             .filter(|e| e.token_type == TokenType::LeftBrace)
             .count(),
         2
-    );
-
-    assert_eq!(
-        tokens
-            .iter()
-            .filter(|e| e.token_type == TokenType::NewLine)
-            .count(),
-        9
     );
 
     assert_eq!(
@@ -259,24 +248,19 @@ fn test_while() {
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
 
-    assert_eq!(tokens[0].token_type, TokenType::NewLine);
-    assert_eq!(tokens[1].token_type, TokenType::Boolean);
-    assert_eq!(tokens[2].token_type, TokenType::Identifier);
-    assert_eq!(tokens[3].token_type, TokenType::Equal);
-    assert_eq!(tokens[4].token_type, TokenType::True);
-    assert_eq!(tokens[5].token_type, TokenType::Semicolon);
-    assert_eq!(tokens[6].token_type, TokenType::NewLine);
-    assert_eq!(tokens[7].token_type, TokenType::While);
-    assert_eq!(tokens[8].token_type, TokenType::LeftParen);
-    assert_eq!(tokens[9].token_type, TokenType::Identifier);
-    assert_eq!(tokens[10].token_type, TokenType::EqualEqual);
-    assert_eq!(tokens[11].token_type, TokenType::True);
-    assert_eq!(tokens[12].token_type, TokenType::RightParen);
-    assert_eq!(tokens[13].token_type, TokenType::NewLine);
-    assert_eq!(tokens[14].token_type, TokenType::LeftBrace);
-    assert_eq!(tokens[15].token_type, TokenType::NewLine);
-    assert_eq!(tokens[16].token_type, TokenType::RightBrace);
-    assert_eq!(tokens[17].token_type, TokenType::NewLine);
+    assert_eq!(tokens[0].token_type, TokenType::Boolean);
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].token_type, TokenType::Equal);
+    assert_eq!(tokens[3].token_type, TokenType::True);
+    assert_eq!(tokens[4].token_type, TokenType::Semicolon);
+    assert_eq!(tokens[5].token_type, TokenType::While);
+    assert_eq!(tokens[6].token_type, TokenType::LeftParen);
+    assert_eq!(tokens[7].token_type, TokenType::Identifier);
+    assert_eq!(tokens[8].token_type, TokenType::EqualEqual);
+    assert_eq!(tokens[9].token_type, TokenType::True);
+    assert_eq!(tokens[10].token_type, TokenType::RightParen);
+    assert_eq!(tokens[11].token_type, TokenType::LeftBrace);
+    assert_eq!(tokens[12].token_type, TokenType::RightBrace);
 }
 
 #[test]
@@ -289,9 +273,9 @@ fn test_error_standard_strings() {
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
 
-    assert_eq!(tokens[1].token_type, TokenType::Unknown);
-    assert_eq!(tokens[3].token_type, TokenType::Identifier);
-    assert_eq!(tokens[5].token_type, TokenType::Unknown);
+    assert_eq!(tokens[0].token_type, TokenType::Unknown);
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].token_type, TokenType::Unknown);
 }
 
 #[test]

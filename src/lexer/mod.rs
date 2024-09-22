@@ -1,3 +1,3 @@
 pub mod scanner;
-mod test;
+mod lexer_test;
 pub mod token;

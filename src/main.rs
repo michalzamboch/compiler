@@ -8,11 +8,10 @@ fn main() {
         int x = 10;
         float y = 3.14f;
         boolean z = true;
-        string s = "xxx";
-        class MyClass {
-            void myMethod() {
-                print('Hello, world!');
-            }
+        string s = "hello";
+
+        void myMethod() {
+            print('Hello, world!');
         }
     "#;
 
