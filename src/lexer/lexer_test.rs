@@ -306,3 +306,18 @@ fn test_brackets() {
     assert_eq!(tokens[4].token_type, TokenType::RightSquareBracket);
     assert_eq!(tokens[5].token_type, TokenType::RightBrace);
 }
+
+#[test]
+fn test_minus_number() {
+    let input = r#"float i  = -5.123;"#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens[0].token_type, TokenType::Float);
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].token_type, TokenType::Equal);
+    assert_eq!(tokens[3].token_type, TokenType::Minus);
+    assert_eq!(tokens[4].token_type, TokenType::Real);
+    assert_eq!(tokens[4].value, TokenValue::Float(5.123));
+    assert_eq!(tokens[5].token_type, TokenType::Semicolon);
+}
