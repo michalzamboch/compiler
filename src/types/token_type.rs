@@ -21,8 +21,6 @@ pub enum TokenType {
     Slash,
     Star,
 
-    NewLine,
-
     Bang,
     BangEqual,
     Equal,
