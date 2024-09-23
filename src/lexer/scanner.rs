@@ -89,22 +89,33 @@ impl Scanner {
     }
 
     fn create_variable_token(&self, element: &str, line: i32) -> Option<Token> {
-        if element.starts_with("\"") && element.ends_with("\"") && element.len() > 1 {
+        if self.is_string_literal(element) {
             Token::new(TokenType::Str, element.to_string(), line).into()
-        } else if element.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+        } else if self.is_number(element) {
             if element.contains(".") {
                 Token::new(TokenType::Real, element.to_string(), line).into()
             } else {
                 Token::new(TokenType::Interger, element.to_string(), line).into()
             }
-        } else if element
-            .chars()
-            .next()
-            .is_some_and(|c| c.is_ascii_alphabetic())
-        {
+        } else if self.is_idetifier(element) {
             Token::new(TokenType::Identifier, element.to_string(), line).into()
         } else {
             Token::new(TokenType::Unknown, element.to_string(), line).into()
         }
+    }
+
+    fn is_string_literal(&self, element: &str) -> bool {
+        element.starts_with("\"") && element.ends_with("\"") && element.len() > 1
+    }
+
+    fn is_number(&self, element: &str) -> bool {
+        element.chars().next().is_some_and(|c| c.is_ascii_digit())
+    }
+
+    fn is_idetifier(&self, element: &str) -> bool {
+        element
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_ascii_alphabetic())
     }
 }

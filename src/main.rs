@@ -2,6 +2,7 @@ use lexer::scanner::Scanner;
 
 mod lexer;
 mod types;
+mod ast;
 
 fn main() {
     let input = r#"
