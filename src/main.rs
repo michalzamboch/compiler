@@ -1,8 +1,8 @@
 use lexer::scanner::Scanner;
 
+mod ast;
 mod lexer;
 mod types;
-mod ast;
 
 fn main() {
     let input = r#"

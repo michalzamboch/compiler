@@ -30,11 +30,9 @@ fn test_new_line() {
     let input = r"
     int";
     let scanner = Scanner::new(input);
-
     let tokens = scanner.get_tokens();
 
     assert_eq!(tokens[0].token_type, TokenType::Int);
-
     assert_eq!(tokens[0].line, 1);
 }
 
@@ -75,10 +73,9 @@ fn test_element_lines() {
         int x = 10;
         float y = 3.14f;
         boolean z = true;
-        class MyClass {
-            void myMethod() {
-                print('Hello, world!');
-            }
+
+        void myMethod() {
+            print('Hello, world!');
         }
     ";
     let scanner = Scanner::new(input);
@@ -320,4 +317,25 @@ fn test_minus_number() {
     assert_eq!(tokens[4].token_type, TokenType::Real);
     assert_eq!(tokens[4].value, TokenValue::Float(5.123));
     assert_eq!(tokens[5].token_type, TokenType::Semicolon);
+}
+
+#[test]
+fn test_comment() {
+    let input = r#"int i = 5; // commmnet
+    int y = 5;
+    "#;
+    let scanner = Scanner::new(input);
+    let tokens = scanner.get_tokens();
+
+    assert_eq!(tokens[0].token_type, TokenType::Int);
+    assert_eq!(tokens[1].token_type, TokenType::Identifier);
+    assert_eq!(tokens[2].token_type, TokenType::Equal);
+    assert_eq!(tokens[3].token_type, TokenType::Interger);
+    assert_eq!(tokens[4].token_type, TokenType::Semicolon);
+
+    assert_eq!(tokens[5].token_type, TokenType::Int);
+    assert_eq!(tokens[6].token_type, TokenType::Identifier);
+    assert_eq!(tokens[7].token_type, TokenType::Equal);
+    assert_eq!(tokens[8].token_type, TokenType::Interger);
+    assert_eq!(tokens[9].token_type, TokenType::Semicolon);
 }
