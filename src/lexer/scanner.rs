@@ -1,20 +1,37 @@
 #![allow(dead_code)]
 
+use std::collections::HashMap;
+
 use crate::types::token_type::TokenType;
 
 use super::token::Token;
 use regex::Regex;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Scanner {
     source: String,
     reg: Regex,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone)]
 struct TempState {
     current_line: i32,
     ignore_next: bool,
+    pair_elements: HashMap<&'static str, &'static str>,
+}
+
+impl TempState {
+    fn new() -> Self {
+        let mut pairs = HashMap::new();
+        pairs.insert("/*", "*/");
+        pairs.insert("//", "\n");
+
+        Self {
+            current_line: 0,
+            ignore_next: false,
+            pair_elements: pairs,
+        }
+    }
 }
 
 impl Scanner {
@@ -29,7 +46,7 @@ impl Scanner {
     }
 
     pub fn get_tokens(&self) -> Vec<Token> {
-        let mut state = TempState::default();
+        let mut state = TempState::new();
 
         let tokens: Vec<Token> = self
             .reg
