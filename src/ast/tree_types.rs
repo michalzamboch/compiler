@@ -10,6 +10,5 @@ pub enum Expresion {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Statement {
     Unknown(String),
-    ExpresionStatement(Box<Expresion>)
+    ExpresionStatement(Box<Expresion>),
 }
-

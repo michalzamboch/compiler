@@ -6,7 +6,7 @@ use crate::{
 };
 
 #[test]
-fn test_length() {
+fn length() {
     let input = "int i = 10;";
     let scanner = Scanner::new(input);
 
@@ -15,7 +15,7 @@ fn test_length() {
 }
 
 #[test]
-fn test_int_expression() {
+fn int_expression() {
     let input = r"int i = 10;";
     let scanner = Scanner::new(input);
 
@@ -26,7 +26,7 @@ fn test_int_expression() {
 }
 
 #[test]
-fn test_new_line() {
+fn new_line() {
     let input = r"
     int";
     let scanner = Scanner::new(input);
@@ -37,7 +37,7 @@ fn test_new_line() {
 }
 
 #[test]
-fn test_emelent_count() {
+fn emelent_count() {
     let input = r"
         int x = 10;
         float y = 3.14f;
@@ -68,7 +68,7 @@ fn test_emelent_count() {
 }
 
 #[test]
-fn test_element_lines() {
+fn element_lines() {
     let input = r"
         int x = 10;
         float y = 3.14f;
@@ -90,7 +90,7 @@ fn test_element_lines() {
 }
 
 #[test]
-fn test_eq_tokens() {
+fn eq_tokens() {
     let input = r"    == <= >= != =    ";
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -105,7 +105,7 @@ fn test_eq_tokens() {
 }
 
 #[test]
-fn test_math_tokens() {
+fn math_tokens() {
     let input = r"5 + 4 - 7*10/2";
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -119,7 +119,7 @@ fn test_math_tokens() {
 }
 
 #[test]
-fn test_commas() {
+fn commas() {
     let input = r#""hello",5,5.45"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -134,7 +134,7 @@ fn test_commas() {
 }
 
 #[test]
-fn test_dots() {
+fn dots() {
     let input = r#"CLASS_NAME.FUNCTION,5,5.45"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -151,7 +151,7 @@ fn test_dots() {
 }
 
 #[test]
-fn test_equals() {
+fn equals() {
     let input = r#"==="#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -162,7 +162,7 @@ fn test_equals() {
 }
 
 #[test]
-fn test_and_or() {
+fn and_or() {
     let input = r#" || && "#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -173,7 +173,7 @@ fn test_and_or() {
 }
 
 #[test]
-fn test_true_false() {
+fn true_false() {
     let input = r#" true  false "#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -184,7 +184,7 @@ fn test_true_false() {
 }
 
 #[test]
-fn test_string() {
+fn string() {
     let input = r#" "Hello".,"World" "#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -197,7 +197,7 @@ fn test_string() {
 }
 
 #[test]
-fn test_int() {
+fn int() {
     let input = r#" 123.456Hello 123 Hello123"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -209,7 +209,7 @@ fn test_int() {
     assert_eq!(tokens[1].literal, "Hello");
 
     assert_eq!(tokens[2].literal, "123");
-    assert_eq!(tokens[2].token_type, TokenType::Interger);
+    assert_eq!(tokens[2].token_type, TokenType::Integer);
     assert_eq!(tokens[2].value, TokenValue::Int(123));
 
     assert_eq!(tokens[3].literal, "Hello123");
@@ -218,7 +218,7 @@ fn test_int() {
 }
 
 #[test]
-fn test_name() {
+fn name() {
     let input = r#" variable variable1 5000 variable2variable "#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -229,13 +229,13 @@ fn test_name() {
     assert_eq!(tokens[1].literal, "variable1");
     assert_eq!(tokens[1].token_type, TokenType::Identifier);
     assert_eq!(tokens[2].literal, "5000");
-    assert_eq!(tokens[2].token_type, TokenType::Interger);
+    assert_eq!(tokens[2].token_type, TokenType::Integer);
     assert_eq!(tokens[3].literal, "variable2variable");
     assert_eq!(tokens[3].token_type, TokenType::Identifier);
 }
 
 #[test]
-fn test_while() {
+fn while_loop() {
     let input = r#" 
     bool x = true;
     while(x==true)
@@ -261,7 +261,7 @@ fn test_while() {
 }
 
 #[test]
-fn test_error_standard_strings() {
+fn error_standard_strings() {
     let input = r#" 
     "
     hello
@@ -276,7 +276,7 @@ fn test_error_standard_strings() {
 }
 
 #[test]
-fn test_assign() {
+fn assign() {
     let input = r#"int i=10+20;"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -284,13 +284,13 @@ fn test_assign() {
     assert_eq!(tokens[0].token_type, TokenType::Int);
     assert_eq!(tokens[1].token_type, TokenType::Identifier);
     assert_eq!(tokens[2].token_type, TokenType::Equal);
-    assert_eq!(tokens[3].token_type, TokenType::Interger);
+    assert_eq!(tokens[3].token_type, TokenType::Integer);
     assert_eq!(tokens[4].token_type, TokenType::Plus);
-    assert_eq!(tokens[5].token_type, TokenType::Interger);
+    assert_eq!(tokens[5].token_type, TokenType::Integer);
 }
 
 #[test]
-fn test_brackets() {
+fn brackets() {
     let input = r#"{[()]}"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -305,7 +305,7 @@ fn test_brackets() {
 }
 
 #[test]
-fn test_minus_number() {
+fn minus_number() {
     let input = r#"float i  = -5.123;"#;
     let scanner = Scanner::new(input);
     let tokens = scanner.get_tokens();
@@ -320,7 +320,7 @@ fn test_minus_number() {
 }
 
 #[test]
-fn test_comment() {
+fn comment() {
     let input = r#"int i = 5; // commmnet
     int y = 5;
     "#;
@@ -330,12 +330,12 @@ fn test_comment() {
     assert_eq!(tokens[0].token_type, TokenType::Int);
     assert_eq!(tokens[1].token_type, TokenType::Identifier);
     assert_eq!(tokens[2].token_type, TokenType::Equal);
-    assert_eq!(tokens[3].token_type, TokenType::Interger);
+    assert_eq!(tokens[3].token_type, TokenType::Integer);
     assert_eq!(tokens[4].token_type, TokenType::Semicolon);
 
     assert_eq!(tokens[5].token_type, TokenType::Int);
     assert_eq!(tokens[6].token_type, TokenType::Identifier);
     assert_eq!(tokens[7].token_type, TokenType::Equal);
-    assert_eq!(tokens[8].token_type, TokenType::Interger);
+    assert_eq!(tokens[8].token_type, TokenType::Integer);
     assert_eq!(tokens[9].token_type, TokenType::Semicolon);
 }

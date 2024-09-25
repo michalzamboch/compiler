@@ -135,7 +135,7 @@ impl Scanner {
             if element.contains(".") {
                 Token::new(TokenType::Real, literal, line)
             } else {
-                Token::new(TokenType::Interger, literal, line)
+                Token::new(TokenType::Integer, literal, line)
             }
         } else if self.is_idetifier(element) {
             Token::new(TokenType::Identifier, literal, line)

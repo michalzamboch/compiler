@@ -33,7 +33,7 @@ impl Token {
             TokenValue::String(literal.trim_matches('\"').to_owned())
         } else if token_type == TokenType::Real {
             TokenValue::Float(literal.parse().unwrap_or_default())
-        } else if token_type == TokenType::Interger {
+        } else if token_type == TokenType::Integer {
             TokenValue::Int(literal.parse().unwrap_or_default())
         } else {
             TokenValue::None

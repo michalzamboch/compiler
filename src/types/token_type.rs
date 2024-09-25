@@ -38,7 +38,7 @@ pub enum TokenType {
 
     // Literals.
     Str,
-    Interger,
+    Integer,
     Real,
     Boolean,
 
