@@ -1,6 +1,7 @@
 #![allow(dead_code, unused_variables)]
 
 use std::error::Error;
+use std::iter::*;
 
 use super::tree_types::*;
 use crate::{
@@ -10,7 +11,24 @@ use crate::{
 
 #[derive(Debug, Clone)]
 pub struct AbstractSyntaxTree {
-    statements: Vec<Statement>,
+    statements: Vec<Expresion>,
+}
+
+#[derive(Debug, Clone)]
+struct TempState<'a> {
+    current_token: usize,
+    statements: Vec<Expresion>,
+    iterator: std::slice::Iter<'a, Token>,
+}
+
+impl<'a> TempState<'a> {
+    fn new(iterator: std::slice::Iter<'a, Token>) -> TempState<'a> {
+        Self {
+            current_token: 0,
+            statements: vec![],
+            iterator,
+        }
+    }
 }
 
 impl AbstractSyntaxTree {
@@ -19,72 +37,65 @@ impl AbstractSyntaxTree {
     }
 
     pub fn accept_tokens(&mut self, tokens: &[Token]) -> Result<(), Box<dyn Error>> {
-        self.statements.clear();
+        let mut state = TempState::new(tokens.iter());
 
-        for token in tokens {
-            self.match_tokens(token);
+        while state.current_token < tokens.len() {
+            self.match_tokens(&tokens[state.current_token], &mut state)
         }
 
+        self.statements.clear();
+        self.statements = state.statements;
         Ok(())
     }
 
-    fn match_tokens(&mut self, token: &Token) {
-        match token.token_type {
+    /*
+    fn new_match_tokens(&self, state: &mut TempState) {
+        let token = state.iterator.next();
+        match token {
+            Some(value) => {
+                self.match_token(value, state);
+            }
+            None => (),
+        }
+    }
+
+    fn match_token(&self, value: &Token, state: &mut TempState<'_>) {
+        match value.token_type {
             TokenType::Unknown => panic!("Unknown token type."),
-            TokenType::LeftParen => (),
-            TokenType::RightParen => (),
-            TokenType::LeftBrace => (),
-            TokenType::RightBrace => (),
-            TokenType::LeftSquareBracket => (),
-            TokenType::RightSquareBracket => (),
-            TokenType::Comma => (),
-            TokenType::Dot => (),
-            TokenType::Minus => (),
-            TokenType::Plus => (),
-            TokenType::Semicolon => (),
-            TokenType::Slash => (),
-            TokenType::Star => (),
-            TokenType::Bang => (),
-            TokenType::BangEqual => (),
-            TokenType::Equal => (),
-            TokenType::EqualEqual => (),
-            TokenType::Greater => (),
-            TokenType::GreaterEqual => (),
-            TokenType::Less => (),
-            TokenType::LessEqual => (),
-            TokenType::Identifier => (),
-            TokenType::Int => (),
-            TokenType::Float => (),
-            TokenType::String => (),
-            TokenType::Str => (),
             TokenType::Integer => {
-                match token.value {
+                match value.value {
                     TokenValue::Int(value) => {
-                        let value =
-                            Statement::ExpresionStatement(Box::new(Expresion::Integer(value)));
-                        self.statements.push(value);
+                        let value = Expresion::Integer(value);
+                        state.statements.push(value);
                     }
                     _ => panic!("Impossible int value."),
                 };
             }
-            TokenType::Real => (),
-            TokenType::Boolean => (),
-            TokenType::And => (),
-            TokenType::Else => (),
-            TokenType::False => (),
-            TokenType::Fun => (),
-            TokenType::For => (),
-            TokenType::If => (),
-            TokenType::Nil => (),
-            TokenType::Or => (),
-            TokenType::Print => (),
-            TokenType::Return => (),
-            TokenType::True => (),
-            TokenType::While => (),
+            _ => (),
+        }
+    }
+    */
+
+    fn match_tokens(&self, token: &Token, state: &mut TempState) {
+        match token.token_type {
+            TokenType::Unknown => panic!("Unknown token type."),
+            TokenType::Integer => {
+                match token.value {
+                    TokenValue::Int(value) => {
+                        let value = Expresion::Integer(value);
+                        state.current_token += 1;
+                        state.statements.push(value);
+                    }
+                    _ => panic!("Impossible int value."),
+                };
+            }
+            _ => {
+                state.current_token += 1;
+            }
         };
     }
 
-    pub fn get(&self) -> &[Statement] {
+    pub fn get(&self) -> &[Expresion] {
         &self.statements
     }
 }

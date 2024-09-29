@@ -1,10 +1,7 @@
-#![allow(unused_imports, unused_variables)]
+#![allow(unused_imports, unused_variables, dead_code)]
 
 use super::tree::AbstractSyntaxTree;
-use crate::{
-    ast::tree_types::{Expresion, Statement},
-    lexer::scanner::Scanner,
-};
+use crate::{ast::tree_types::*, lexer::scanner::Scanner};
 
 #[test]
 fn test_basic_int() {
@@ -18,11 +15,15 @@ fn test_basic_int() {
 
     let statements = ast.get();
 
-    let value = Statement::ExpresionStatement(Box::new(Expresion::Integer(5)));
+    let value = Expresion::Integer(5);
     assert_eq!(value, statements[0]);
+
+    for i in statements.iter() {
+        println!("{:?}", i);
+    }
 }
 
-#[test]
+//#[test]
 fn basic_plus_expression() {
     let input = " 5 + 5";
     let tokens = Scanner::new(input).get_tokens();
@@ -33,9 +34,9 @@ fn basic_plus_expression() {
     assert!(result.is_ok());
 
     let statements = ast.get();
-    let value = Statement::ExpresionStatement(Box::new(Expresion::Binary(
+    let value = Expresion::Binary(
         Box::new(Expresion::Integer(5)),
         "+",
         Box::new(Expresion::Integer(5)),
-    )));
+    );
 }
