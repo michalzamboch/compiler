@@ -46,7 +46,41 @@ impl AbstractSyntaxTree {
         self.statements = state.statements;
         Ok(())
     }
-    
+
+    fn match_recursivly(&self, token: &Token, state: &mut TempState) -> Expresion {
+         match token.token_type {
+            TokenType::Unknown => panic!("Unknown token type."),
+
+            TokenType::Integer => {
+                match token.value {
+                    TokenValue::Int(value) => {
+                        let value = Expresion::Integer(value);
+                        state.current += 1;
+                        state.statements.push(value);
+                    }
+                    _ => panic!("Impossible int value."),
+                };
+                Expresion::Unknown("Final".into())
+            }
+
+            TokenType::Plus => {
+                let previous_value = state.statements.pop().unwrap();
+                state.current += 1;
+                let value = Expresion::Binary(
+                    Box::new(previous_value),
+                    "+",
+                    Box::new(self.match_recursivly(token, state)),
+                );
+                state.statements.push(value);
+                Expresion::Unknown("Final".into())
+            }
+
+            _ => {
+                state.current += 1;
+                Expresion::Unknown("Final".into())
+            }
+        }       
+    }
 
     fn match_tokens(&self, token: &Token, state: &mut TempState) {
         match token.token_type {
@@ -60,6 +94,15 @@ impl AbstractSyntaxTree {
                     }
                     _ => panic!("Impossible int value."),
                 };
+            }
+            TokenType::Plus => {
+                let value = Expresion::Binary(
+                    Box::new(Expresion::Integer(5)),
+                    "+",
+                    Box::new(Expresion::Integer(5)),
+                );
+                state.current += 1;
+                state.statements.push(value);
             }
             _ => {
                 state.current += 1;
